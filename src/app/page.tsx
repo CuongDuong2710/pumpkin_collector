@@ -1,4 +1,5 @@
 import Image from "next/image";
+import PumpkinGame from "@/components/PumpkinGame";
 
 export default function Home() {
   return (
@@ -15,18 +16,38 @@ export default function Home() {
             earn rewards, and mint exclusive Halloween NFTs.
           </p>
           <div className="flex justify-center space-x-4">
-            <button className="bg-white text-orange-600 px-8 py-3 rounded-full font-bold text-lg hover:bg-orange-50 transition-colors shadow-lg">
-              🎮 Play Frame
-            </button>
-            <button className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-full font-bold text-lg hover:bg-white hover:text-orange-600 transition-colors">
+            <a 
+              href="#game" 
+              className="bg-white text-orange-600 px-8 py-3 rounded-full font-bold text-lg hover:bg-orange-50 transition-colors shadow-lg"
+            >
+              🎮 Play Now
+            </a>
+            <a 
+              href="#features" 
+              className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-full font-bold text-lg hover:bg-white hover:text-orange-600 transition-colors"
+            >
               📖 Learn More
-            </button>
+            </a>
           </div>
         </div>
       </header>
 
+      {/* Interactive Game Section */}
+      <section id="game" className="py-20 px-4">
+        <div className="container mx-auto">
+          <h2 className="text-4xl font-bold text-center text-white mb-8">
+            🎮 Play the Game Live!
+          </h2>
+          <p className="text-xl text-gray-300 text-center mb-12 max-w-3xl mx-auto">
+            Experience the pumpkin collection game right here! Click falling pumpkins to collect them 
+            and try to beat your high score. No wallet connection needed to play!
+          </p>
+          <PumpkinGame />
+        </div>
+      </section>
+
       {/* Features Section */}
-      <section className="py-20 px-4">
+      <section id="features" className="py-20 px-4">
         <div className="container mx-auto">
           <h2 className="text-4xl font-bold text-center text-white mb-16">
             🌟 Game Features
@@ -61,39 +82,45 @@ export default function Home() {
       <section className="py-20 px-4 bg-black/20">
         <div className="container mx-auto">
           <h2 className="text-4xl font-bold text-center text-white mb-16">
-            🎮 How to Play
+            � How to Play
           </h2>
           <div className="max-w-4xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div className="space-y-6">
-                <div className="flex items-start space-x-4">
-                  <div className="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">1</div>
-                  <div>
-                    <h3 className="text-xl font-bold text-orange-300 mb-2">Open Farcaster Frame</h3>
-                    <p className="text-gray-300">Access the game through the Farcaster Frame interface.</p>
-                  </div>
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6">
+                <div className="flex items-center mb-4">
+                  <span className="text-3xl mr-4">1️⃣</span>
+                  <h3 className="text-xl font-bold text-orange-300">Start Playing</h3>
                 </div>
-                <div className="flex items-start space-x-4">
-                  <div className="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">2</div>
-                  <div>
-                    <h3 className="text-xl font-bold text-orange-300 mb-2">Start Collecting</h3>
-                    <p className="text-gray-300">Click to collect pumpkins and build your collection.</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-4">
-                  <div className="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">3</div>
-                  <div>
-                    <h3 className="text-xl font-bold text-orange-300 mb-2">Earn & Mint</h3>
-                    <p className="text-gray-300">Reach milestones to unlock NFT minting opportunities.</p>
-                  </div>
-                </div>
+                <p className="text-gray-300">
+                  Click the "Start Game" button in the game section above. Watch as pumpkins fall from the sky!
+                </p>
               </div>
-              <div className="text-center">
-                <div className="bg-gradient-to-br from-orange-400 to-red-600 rounded-xl p-8 inline-block">
-                  <div className="text-6xl mb-4">🎃</div>
-                  <div className="text-white font-bold text-xl">Ready to Play?</div>
-                  <div className="text-orange-100 mt-2">Cast the frame to get started!</div>
+              <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6">
+                <div className="flex items-center mb-4">
+                  <span className="text-3xl mr-4">2️⃣</span>
+                  <h3 className="text-xl font-bold text-orange-300">Collect Pumpkins</h3>
                 </div>
+                <p className="text-gray-300">
+                  Click on falling pumpkins to collect them. Each pumpkin gives you points!
+                </p>
+              </div>
+              <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6">
+                <div className="flex items-center mb-4">
+                  <span className="text-3xl mr-4">3️⃣</span>
+                  <h3 className="text-xl font-bold text-orange-300">Level Up</h3>
+                </div>
+                <p className="text-gray-300">
+                  Reach score milestones to advance levels. Higher levels bring faster pumpkins and more points!
+                </p>
+              </div>
+              <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6">
+                <div className="flex items-center mb-4">
+                  <span className="text-3xl mr-4">4️⃣</span>
+                  <h3 className="text-xl font-bold text-orange-300">Beat the Clock</h3>
+                </div>
+                <p className="text-gray-300">
+                  You have 60 seconds per game. Try to collect as many pumpkins as possible!
+                </p>
               </div>
             </div>
           </div>

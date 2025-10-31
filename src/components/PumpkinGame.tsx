@@ -240,6 +240,27 @@ export default function PumpkinGame() {
           </p>
         </div>
       )}
+
+      {/* Share on Farcaster Button */}
+      {gameState.timeLeft === 0 && gameState.score > 0 && (
+        <div className="mt-6 text-center">
+          <button
+            onClick={() => {
+              const shareText = `🎃 Just scored ${gameState.score} points in Pumpkin Collector! I collected ${gameState.pumpkins} pumpkins and reached level ${gameState.level}! 🏆\n\nCan you beat my score? Play the game here:`;
+              const shareUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(shareText)}&embeds[]=${encodeURIComponent(window.location.origin)}`;
+              window.open(shareUrl, '_blank');
+            }}
+            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold py-3 px-6 rounded-full text-lg shadow-lg transform transition-all hover:scale-105 active:scale-95 flex items-center justify-center mx-auto space-x-2"
+          >
+            <span>🐸</span>
+            <span>Share on Farcaster</span>
+            <span>📢</span>
+          </button>
+          <p className="text-xs text-gray-400 mt-2">
+            Share your achievement and challenge your friends!
+          </p>
+        </div>
+      )}
     </div>
   );
 }

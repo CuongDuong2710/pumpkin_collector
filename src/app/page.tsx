@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import PumpkinGame from "@/components/PumpkinGame";
 
@@ -15,7 +17,7 @@ export default function Home() {
             The spookiest collection game on Base Network! Collect magical pumpkins, 
             earn rewards, and mint exclusive Halloween NFTs.
           </p>
-          <div className="flex justify-center space-x-4">
+          <div className="flex justify-center space-x-4 flex-wrap">
             <a 
               href="#game" 
               className="bg-white text-orange-600 px-8 py-3 rounded-full font-bold text-lg hover:bg-orange-50 transition-colors shadow-lg"
@@ -28,6 +30,17 @@ export default function Home() {
             >
               📖 Learn More
             </a>
+            <button
+              onClick={() => {
+                const shareText = `🎃 Check out Pumpkin Collector - the spookiest collection game on Base Network! 🕸️\n\nCollect magical pumpkins, earn rewards, and compete for high scores! 🏆\n\nPlay now:`;
+                const shareUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(shareText)}&embeds[]=${encodeURIComponent(window.location.origin)}`;
+                window.open(shareUrl, '_blank');
+              }}
+              className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-full font-bold text-lg transition-colors shadow-lg flex items-center space-x-2"
+            >
+              <span>🐸</span>
+              <span>Share</span>
+            </button>
           </div>
         </div>
       </header>

@@ -29,7 +29,7 @@ export default function PumpkinGame() {
   });
 
   const [fallingPumpkins, setFallingPumpkins] = useState<FallingPumpkin[]>([]);
-  const [gameArea, setGameArea] = useState({ width: 600, height: 400 });
+  const [gameArea, setGameArea] = useState({ width: 320, height: 280 });
   const [lastSpawn, setLastSpawn] = useState(0);
 
   const pumpkinEmojis = ['🎃', '🟠', '🧡', '🟤'];
@@ -110,44 +110,44 @@ export default function PumpkinGame() {
   }, [gameState.isPlaying, spawnPumpkin, updatePumpkins]);
 
   return (
-    <div className="bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 rounded-xl p-8 max-w-4xl mx-auto">
+    <div className="bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 rounded-xl p-4 max-w-sm mx-auto">
       {/* Game Header */}
-      <div className="text-center mb-6">
-        <h2 className="text-4xl font-bold text-orange-400 mb-4">
+      <div className="text-center mb-4">
+        <h2 className="text-2xl font-bold text-orange-400 mb-3">
           🎃 Live Pumpkin Collector 🎃
         </h2>
-        <div className="flex justify-center space-x-8 text-xl">
-          <div className="bg-orange-500/20 px-4 py-2 rounded-lg">
-            <span className="text-orange-300">Score: </span>
-            <span className="text-white font-bold">{gameState.score}</span>
-          </div>
-          <div className="bg-purple-500/20 px-4 py-2 rounded-lg">
-            <span className="text-purple-300">Pumpkins: </span>
+        <div className="grid grid-cols-2 gap-2 text-sm">
+          <div className="bg-orange-500/20 px-2 py-1 rounded">
+            <span className="text-orange-300">Pumpkins: </span>
             <span className="text-white font-bold">{gameState.pumpkins}</span>
           </div>
-          <div className="bg-blue-500/20 px-4 py-2 rounded-lg">
+          <div className="bg-blue-500/20 px-2 py-1 rounded">
             <span className="text-blue-300">Time: </span>
             <span className="text-white font-bold">{gameState.timeLeft}s</span>
           </div>
-          <div className="bg-green-500/20 px-4 py-2 rounded-lg">
+          <div className="bg-green-500/20 px-2 py-1 rounded">
             <span className="text-green-300">Level: </span>
             <span className="text-white font-bold">{gameState.level}</span>
+          </div>
+          <div className="bg-purple-500/20 px-2 py-1 rounded">
+            <span className="text-purple-300">Score: </span>
+            <span className="text-white font-bold">{gameState.score}</span>
           </div>
         </div>
       </div>
 
       {/* Game Area */}
-      <div className="relative mx-auto mb-6" style={{ width: gameArea.width, height: gameArea.height }}>
+      <div className="relative mx-auto mb-4" style={{ width: gameArea.width, height: gameArea.height }}>
         <div 
           className="relative bg-gradient-to-b from-indigo-900 to-purple-900 border-4 border-orange-500 rounded-lg overflow-hidden cursor-crosshair"
           style={{ width: '100%', height: '100%' }}
         >
           {/* Background pattern */}
           <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-4 left-4 text-6xl">🌙</div>
-            <div className="absolute top-8 right-8 text-4xl">⭐</div>
-            <div className="absolute bottom-4 left-8 text-5xl">🦇</div>
-            <div className="absolute bottom-8 right-4 text-4xl">👻</div>
+            <div className="absolute top-2 left-2 text-2xl">🌙</div>
+            <div className="absolute top-2 right-2 text-xl">⭐</div>
+            <div className="absolute bottom-2 left-2 text-2xl">🦇</div>
+            <div className="absolute bottom-2 right-2 text-xl">👻</div>
           </div>
 
           {/* Falling Pumpkins */}
@@ -170,25 +170,25 @@ export default function PumpkinGame() {
           {/* Game Status Overlay */}
           {!gameState.isPlaying && (
             <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-              <div className="text-center">
+              <div className="text-center p-4">
                 {gameState.timeLeft === 0 ? (
                   <div>
-                    <div className="text-6xl mb-4">🎉</div>
-                    <h3 className="text-3xl font-bold text-white mb-2">Game Over!</h3>
-                    <p className="text-xl text-orange-300 mb-4">
-                      Final Score: {gameState.score} points
+                    <div className="text-4xl mb-2">🎉</div>
+                    <h3 className="text-xl font-bold text-white mb-2">Game Over!</h3>
+                    <p className="text-sm text-orange-300 mb-2">
+                      Final Score: {gameState.score}
                     </p>
-                    <p className="text-lg text-white mb-6">
-                      You collected {gameState.pumpkins} pumpkins!
+                    <p className="text-xs text-white mb-3">
+                      {gameState.pumpkins} pumpkins collected!
                     </p>
                   </div>
                 ) : (
                   <div>
-                    <div className="text-6xl mb-4">🎃</div>
-                    <h3 className="text-3xl font-bold text-white mb-4">Ready to Play?</h3>
-                    <p className="text-lg text-orange-300 mb-6">
-                      Click falling pumpkins to collect them!<br/>
-                      You have 30 seconds to get the highest score!
+                    <div className="text-4xl mb-2">🎃</div>
+                    <h3 className="text-xl font-bold text-white mb-2">Ready?</h3>
+                    <p className="text-xs text-orange-300 mb-3">
+                      Click falling pumpkins!<br/>
+                      30 seconds to collect!
                     </p>
                   </div>
                 )}
@@ -203,14 +203,14 @@ export default function PumpkinGame() {
         {!gameState.isPlaying ? (
           <button
             onClick={startGame}
-            className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold py-4 px-8 rounded-full text-xl shadow-lg transform transition-all hover:scale-105 active:scale-95"
+            className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold py-2 px-6 rounded-full text-lg shadow-lg transform transition-all hover:scale-105 active:scale-95"
           >
             {gameState.timeLeft === 0 ? '🔄 Play Again' : '🎮 Start Game'}
           </button>
         ) : (
           <button
             onClick={endGame}
-            className="bg-gradient-to-r from-gray-500 to-gray-700 hover:from-gray-600 hover:to-gray-800 text-white font-bold py-3 px-6 rounded-full text-lg shadow-lg"
+            className="bg-gradient-to-r from-gray-500 to-gray-700 hover:from-gray-600 hover:to-gray-800 text-white font-bold py-2 px-4 rounded-full text-sm shadow-lg"
           >
             ⏹️ Stop Game
           </button>
@@ -218,10 +218,9 @@ export default function PumpkinGame() {
       </div>
 
       {/* Instructions */}
-      <div className="mt-6 text-center text-gray-300">
-        <p className="text-sm">
-          💡 <strong>How to Play:</strong> Click the falling pumpkins before they disappear! 
-          Higher levels spawn pumpkins faster. Try to beat your high score!
+      <div className="mt-4 text-center text-gray-300">
+        <p className="text-xs">
+          💡 Click falling pumpkins before they disappear! Higher levels = faster pumpkins!
         </p>
       </div>
 
@@ -243,20 +242,20 @@ export default function PumpkinGame() {
 
       {/* Share on Farcaster Button */}
       {gameState.timeLeft === 0 && gameState.score > 0 && (
-        <div className="mt-6 text-center">
+        <div className="mt-4 text-center">
           <button
             onClick={() => {
               const shareText = `🎃 Just scored ${gameState.score} points in Pumpkin Collector! I collected ${gameState.pumpkins} pumpkins and reached level ${gameState.level}! 🏆\n\nCan you beat my score? Play the game here:`;
               const shareUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(shareText)}&embeds[]=${encodeURIComponent(window.location.origin)}`;
               window.open(shareUrl, '_blank');
             }}
-            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold py-3 px-6 rounded-full text-lg shadow-lg transform transition-all hover:scale-105 active:scale-95 flex items-center justify-center mx-auto space-x-2"
+            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold py-2 px-4 rounded-full text-sm shadow-lg transform transition-all hover:scale-105 active:scale-95 flex items-center justify-center mx-auto space-x-1"
           >
             <span>🐸</span>
             <span>Share on Farcaster</span>
             <span>📢</span>
           </button>
-          <p className="text-xs text-gray-400 mt-2">
+          <p className="text-xs text-gray-400 mt-1">
             Share your achievement and challenge your friends!
           </p>
         </div>

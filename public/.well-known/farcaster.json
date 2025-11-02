@@ -1,0 +1,32 @@
+{
+  "miniapp": {
+    "version": "1",
+    "name": "Pumpkin Collector",
+    "iconUrl": "https://pumpkin-collector.vercel.app/pumpkin-icon.png",
+    "homeUrl": "https://pumpkin-collector.vercel.app",
+    "splashImageUrl": "https://pumpkin-collector.vercel.app/pumpkin-splash.png",
+    "splashBackgroundColor": "#1a1a1a",
+    "subtitle": "Halloween collection game",
+    "description": "Collect magical pumpkins in this spooky Halloween-themed mini game built on Base Network. Click to gather pumpkins and unlock rewards!",
+    "primaryCategory": "games",
+    "tags": [
+      "halloween",
+      "collection",
+      "game",
+      "pumpkins",
+      "base"
+    ],
+    "heroImageUrl": "https://pumpkin-collector.vercel.app/pumpkin-hero.png",
+    "tagline": "Collect spooky pumpkins!",
+    "ogTitle": "Pumpkin Collector",
+    "ogDescription": "Halloween collection game on Base Network - collect magical pumpkins and unlock rewards!",
+    "ogImageUrl": "https://pumpkin-collector.vercel.app/pumpkin-og.png",
+    "requiredChains": [
+      "eip155:8453"
+    ],
+    "requiredCapabilities": [
+      "actions.signIn",
+      "wallet.getEthereumProvider"
+    ]
+  }
+}

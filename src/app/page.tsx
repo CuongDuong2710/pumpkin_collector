@@ -1,9 +1,51 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import PumpkinGame from "@/components/PumpkinGame";
+import { useEffect, useState } from 'react';
+import { sdk } from '@farcaster/miniapp-sdk';
+import PumpkinGame from '@/components/PumpkinGame';
 
 export default function Home() {
+  const [isReady, setIsReady] = useState(false);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const initMiniApp = async () => {
+      try {
+        await sdk.actions.ready();
+        const context = await sdk.context;
+        setUser(context?.user);
+        setIsReady(true);
+      } catch (error) {
+        console.error('Failed to initialize MiniApp:', error);
+        // Fallback for development
+        setUser({
+          fid: 0,
+          username: 'guest',
+          displayName: 'Guest User'
+        });
+        setIsReady(true);
+      }
+    };
+
+    initMiniApp();
+  }, []);
+
+  const userFid = user?.fid ?? 0;
+  const username = user?.username ?? 'guest';
+  const pfpUrl = user?.pfpUrl;
+  const displayName = user?.displayName ?? username;
+
+  if (!isReady) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-6xl mb-4">🎃</div>
+          <div className="text-white text-xl">Loading Pumpkin Collector...</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-900 via-blue-900 to-indigo-900">
       {/* Header */}
@@ -13,6 +55,21 @@ export default function Home() {
           <h1 className="text-6xl font-bold text-white mb-4 drop-shadow-lg">
             🎃 Pumpkin Collector
           </h1>
+          {user && (
+            <div className="mb-4 flex items-center justify-center space-x-3">
+              {pfpUrl && (
+                <img 
+                  src={pfpUrl} 
+                  alt={displayName}
+                  className="w-12 h-12 rounded-full border-2 border-white/50"
+                />
+              )}
+              <div className="text-orange-100">
+                <div className="font-semibold">Welcome, {displayName}!</div>
+                <div className="text-sm opacity-75">@{username}</div>
+              </div>
+            </div>
+          )}
           <p className="text-xl text-orange-100 mb-8 max-w-2xl mx-auto">
             The spookiest collection game on Base Network! Collect magical pumpkins, 
             earn rewards, and mint exclusive Halloween NFTs.
@@ -24,12 +81,6 @@ export default function Home() {
             >
               🎮 Play Now
             </a>
-            <a 
-              href="#features" 
-              className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-full font-bold text-lg hover:bg-white hover:text-orange-600 transition-colors"
-            >
-              📖 Learn More
-            </a>
             <button
               onClick={() => {
                 const shareText = `🎃 Check out Pumpkin Collector - the spookiest collection game on Base Network! 🕸️\n\nCollect magical pumpkins, earn rewards, and compete for high scores! 🏆\n\nPlay now:`;
@@ -39,7 +90,7 @@ export default function Home() {
               className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-full font-bold text-lg transition-colors shadow-lg flex items-center space-x-2"
             >
               <span>🐸</span>
-              <span>Share</span>
+              <span>Share on Farcaster</span>
             </button>
           </div>
         </div>
@@ -86,55 +137,6 @@ export default function Home() {
               <p className="text-gray-300">
                 Turn your rare pumpkins into exclusive NFTs on the Base network.
               </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* How to Play Section */}
-      <section className="py-20 px-4 bg-black/20">
-        <div className="container mx-auto">
-          <h2 className="text-4xl font-bold text-center text-white mb-16">
-            � How to Play
-          </h2>
-          <div className="max-w-4xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6">
-                <div className="flex items-center mb-4">
-                  <span className="text-3xl mr-4">1️⃣</span>
-                  <h3 className="text-xl font-bold text-orange-300">Start Playing</h3>
-                </div>
-                <p className="text-gray-300">
-                  Click the "Start Game" button in the game section above. Watch as pumpkins fall from the sky!
-                </p>
-              </div>
-              <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6">
-                <div className="flex items-center mb-4">
-                  <span className="text-3xl mr-4">2️⃣</span>
-                  <h3 className="text-xl font-bold text-orange-300">Collect Pumpkins</h3>
-                </div>
-                <p className="text-gray-300">
-                  Click on falling pumpkins to collect them. Each pumpkin gives you points!
-                </p>
-              </div>
-              <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6">
-                <div className="flex items-center mb-4">
-                  <span className="text-3xl mr-4">3️⃣</span>
-                  <h3 className="text-xl font-bold text-orange-300">Level Up</h3>
-                </div>
-                <p className="text-gray-300">
-                  Reach score milestones to advance levels. Higher levels bring faster pumpkins and more points!
-                </p>
-              </div>
-              <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6">
-                <div className="flex items-center mb-4">
-                  <span className="text-3xl mr-4">4️⃣</span>
-                  <h3 className="text-xl font-bold text-orange-300">Beat the Clock</h3>
-                </div>
-                <p className="text-gray-300">
-                  You have 60 seconds per game. Try to collect as many pumpkins as possible!
-                </p>
-              </div>
             </div>
           </div>
         </div>

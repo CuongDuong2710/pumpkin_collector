@@ -1,4 +1,10 @@
 {
+
+  "accountAssociation": {
+    "header": "eyJmaWQiOjE5Mjk5NSwidHlwZSI6ImF1dGgiLCJrZXkiOiIweDlBNzc3MUE4NkM4RGM0NUJlM2VCNEQ1MEU2QTk0NzEwNjA0NDBlNjEifQ",
+    "payload": "eyJkb21haW4iOiJwdW1wa2luLWNvbGxlY3Rvci52ZXJjZWwuYXBwIn0",
+    "signature": "aBBYsDss59mGxjb0tdC0fLmcFie1wSozZ1ud1E0cIMUeR21e++nOk/J9Hn0U4/Y5wIA6DGlerDQ54kwqGmWWoxw="
+  },
   "miniapp": {
     "version": "1",
     "name": "Pumpkin Collector",

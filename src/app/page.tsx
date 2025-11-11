@@ -4,31 +4,37 @@ import { useEffect, useState } from 'react';
 import PumpkinGame from '@/components/PumpkinGame';
 
 export default function Home() {
-  const [isReady, setIsReady] = useState(false);
-  const [user, setUser] = useState<any>(null);
+  const [isReady, setIsReady] = useState(true); // Set to true immediately
+  const [user, setUser] = useState<any>({
+    fid: 0,
+    username: 'guest',
+    displayName: 'Guest Player'
+  });
 
   useEffect(() => {
-    const initMiniApp = async () => {
+    // Try to detect if running in Farcaster context
+    const checkFarcasterContext = async () => {
       try {
-        // Fallback user for now (Farcaster SDK removed due to dependency conflicts)
-        setUser({
-          fid: 0,
-          username: 'guest',
-          displayName: 'Guest Player'
-        });
-        setIsReady(true);
+        // Check if we're in a Farcaster frame
+        if (typeof window !== 'undefined') {
+          const params = new URLSearchParams(window.location.search);
+          const fid = params.get('fid');
+          const username = params.get('username');
+          
+          if (fid || username) {
+            setUser({
+              fid: fid ? parseInt(fid) : 0,
+              username: username || 'guest',
+              displayName: username || 'Guest Player'
+            });
+          }
+        }
       } catch (error) {
-        console.error('Failed to initialize:', error);
-        setUser({
-          fid: 0,
-          username: 'guest',
-          displayName: 'Guest Player'
-        });
-        setIsReady(true);
+        console.error('Failed to check Farcaster context:', error);
       }
     };
 
-    initMiniApp();
+    checkFarcasterContext();
   }, []);
 
   const userFid = user?.fid ?? 0;

@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import PumpkinGame from '@/components/PumpkinGame';
+import { sdk } from '@farcaster/miniapp-sdk';
 
 export default function Home() {
-  const [isReady, setIsReady] = useState(true); // Set to true immediately
+  const [isReady, setIsReady] = useState(false);
   const [user, setUser] = useState<any>({
     fid: 0,
     username: 'guest',
@@ -12,29 +13,38 @@ export default function Home() {
   });
 
   useEffect(() => {
-    // Try to detect if running in Farcaster context
-    const checkFarcasterContext = async () => {
+    // Initialize Farcaster SDK
+    const initFarcaster = async () => {
       try {
-        // Check if we're in a Farcaster frame
-        if (typeof window !== 'undefined') {
-          const params = new URLSearchParams(window.location.search);
-          const fid = params.get('fid');
-          const username = params.get('username');
-          
-          if (fid || username) {
-            setUser({
-              fid: fid ? parseInt(fid) : 0,
-              username: username || 'guest',
-              displayName: username || 'Guest Player'
-            });
-          }
+        // Call sdk.actions.ready() to notify Farcaster that the app is ready
+        await sdk.actions.ready();
+        
+        // Get context if available
+        const context = await sdk.context;
+        if (context?.user) {
+          setUser({
+            fid: context.user.fid,
+            username: context.user.username,
+            displayName: context.user.displayName,
+            pfpUrl: context.user.pfpUrl,
+          });
         }
+        
+        setIsReady(true);
+        console.log('Farcaster SDK initialized successfully');
       } catch (error) {
-        console.error('Failed to check Farcaster context:', error);
+        console.error('Failed to initialize Farcaster SDK:', error);
+        // Fallback for non-Farcaster contexts
+        setUser({
+          fid: 0,
+          username: 'guest',
+          displayName: 'Guest Player'
+        });
+        setIsReady(true);
       }
     };
 
-    checkFarcasterContext();
+    initFarcaster();
   }, []);
 
   const userFid = user?.fid ?? 0;

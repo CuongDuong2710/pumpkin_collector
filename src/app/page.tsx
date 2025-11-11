@@ -54,12 +54,12 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-900 via-blue-900 to-indigo-900">
+    <div className="min-h-screen w-full bg-gradient-to-b from-purple-900 via-blue-900 to-indigo-900 overflow-x-hidden">
       {/* Header */}
       <header className="relative overflow-hidden bg-gradient-to-r from-orange-500 to-red-600 shadow-lg">
         <div className="absolute inset-0 bg-black opacity-20"></div>
-        <div className="relative container mx-auto px-4 py-16 text-center">
-          <h1 className="text-6xl font-bold text-white mb-4 drop-shadow-lg">
+        <div className="relative container mx-auto px-4 py-8 md:py-16 text-center">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">
             🎃 Pumpkin Collector
           </h1>
           {user && (

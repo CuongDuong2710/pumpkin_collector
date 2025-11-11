@@ -19,6 +19,16 @@ interface FallingPumpkin {
   emoji: string;
 }
 
+interface NFTMintData {
+  tier: string;
+  mintPrice: string;
+  mintPriceEth: string;
+  eligible: boolean;
+  contractAddress: string;
+  sessionId: string;
+  mintData: string;
+}
+
 export default function PumpkinGame() {
   const [gameState, setGameState] = useState<PumpkinGameState>({
     score: 0,
@@ -31,6 +41,11 @@ export default function PumpkinGame() {
   const [fallingPumpkins, setFallingPumpkins] = useState<FallingPumpkin[]>([]);
   const [gameArea, setGameArea] = useState({ width: 320, height: 280 });
   const [lastSpawn, setLastSpawn] = useState(0);
+  const [nftMintData, setNftMintData] = useState<NFTMintData | null>(null);
+  const [isCheckingNFT, setIsCheckingNFT] = useState(false);
+  const [isMinting, setIsMinting] = useState(false);
+  const [mintSuccess, setMintSuccess] = useState(false);
+  const [gameSessionId, setGameSessionId] = useState<string>('');
 
   const pumpkinEmojis = ['🎃', '🟠', '🧡', '🟤'];
 
@@ -70,6 +85,12 @@ export default function PumpkinGame() {
   };
 
   const startGame = () => {
+    // Generate unique session ID for this game
+    const sessionId = `game_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    setGameSessionId(sessionId);
+    setNftMintData(null);
+    setMintSuccess(false);
+    
     setGameState({
       score: 0,
       pumpkins: 0,
@@ -81,9 +102,26 @@ export default function PumpkinGame() {
     setLastSpawn(0);
   };
 
-  const endGame = () => {
+  const endGame = async () => {
     setGameState(prev => ({ ...prev, isPlaying: false }));
     setFallingPumpkins([]);
+    
+    // Check NFT eligibility after game ends
+    if (gameState.score >= 100 && gameSessionId) {
+      setIsCheckingNFT(true);
+      try {
+        const response = await fetch(`/api/mint-nft?score=${gameState.score}`);
+        const result = await response.json();
+        
+        if (result.success && result.data.eligible) {
+          setNftMintData(result.data);
+        }
+      } catch (error) {
+        console.error('Error checking NFT eligibility:', error);
+      } finally {
+        setIsCheckingNFT(false);
+      }
+    }
   };
 
   // Game timer
@@ -237,6 +275,98 @@ export default function PumpkinGame() {
           <p className="text-sm text-gray-300 mt-1">
             Share your score on Farcaster and challenge your friends!
           </p>
+        </div>
+      )}
+
+      {/* NFT Minting Section */}
+      {gameState.timeLeft === 0 && gameState.score >= 100 && (
+        <div className="mt-4 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded-lg p-4 text-center">
+          {isCheckingNFT ? (
+            <div className="text-green-400">
+              <div className="animate-spin text-2xl mb-2">🎃</div>
+              <p className="text-sm">Checking NFT eligibility...</p>
+            </div>
+          ) : nftMintData ? (
+            <div>
+              <div className="text-2xl text-green-400 mb-2">🎨 NFT Available!</div>
+              <p className="text-white mb-2">
+                Mint your <span className="font-bold text-yellow-400">{nftMintData.tier}</span> Pumpkin NFT!
+              </p>
+              <p className="text-xs text-gray-300 mb-3">
+                Cost: {nftMintData.mintPriceEth} ETH on Base Network
+              </p>
+              {mintSuccess ? (
+                <div className="text-green-400">
+                  <div className="text-xl mb-1">✅ NFT Minted!</div>
+                  <p className="text-xs">Check your wallet for your new Pumpkin NFT!</p>
+                </div>
+              ) : (
+                <button
+                  onClick={async () => {
+                    if (!nftMintData) return;
+                    
+                    setIsMinting(true);
+                    try {
+                      // Check if wallet is connected
+                      if (typeof window !== 'undefined' && (window as any).ethereum) {
+                        const accounts = await (window as any).ethereum.request({ 
+                          method: 'eth_requestAccounts' 
+                        });
+                        
+                        if (accounts.length > 0) {
+                          // Switch to Base network if needed
+                          await (window as any).ethereum.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{ chainId: '0x2105' }], // Base chain ID
+                          });
+                          
+                          // Prepare transaction
+                          const txParams = {
+                            to: nftMintData.contractAddress,
+                            from: accounts[0],
+                            value: `0x${BigInt(nftMintData.mintPrice).toString(16)}`,
+                            data: nftMintData.mintData,
+                            gas: '0x30D40', // 200000 in hex
+                          };
+                          
+                          // Send transaction
+                          const txHash = await (window as any).ethereum.request({
+                            method: 'eth_sendTransaction',
+                            params: [txParams],
+                          });
+                          
+                          if (txHash) {
+                            setMintSuccess(true);
+                          }
+                        } else {
+                          alert('Please connect your wallet first');
+                        }
+                      } else {
+                        alert('Please install MetaMask or use a Web3 wallet');
+                      }
+                    } catch (error) {
+                      console.error('Minting error:', error);
+                      alert('Failed to mint NFT. Please try again.');
+                    } finally {
+                      setIsMinting(false);
+                    }
+                  }}
+                  disabled={isMinting}
+                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-bold py-2 px-4 rounded-full text-sm shadow-lg transform transition-all hover:scale-105 disabled:scale-100 disabled:cursor-not-allowed"
+                >
+                  {isMinting ? '🔄 Minting...' : '🎨 Mint NFT'}
+                </button>
+              )}
+            </div>
+          ) : gameState.score >= 100 ? (
+            <div className="text-yellow-400">
+              <div className="text-xl mb-2">🎯 NFT Eligible!</div>
+              <p className="text-xs text-gray-300">
+                You scored {gameState.score} points - enough for an NFT! 
+                Check back after deployment.
+              </p>
+            </div>
+          ) : null}
         </div>
       )}
 

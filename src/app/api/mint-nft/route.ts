@@ -34,7 +34,7 @@ const NFT_CONTRACT_ABI = [
 ] as const;
 
 // Contract configuration
-const NFT_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS as `0x${string}`;
+const NFT_CONTRACT_ADDRESS = (process.env.NEXT_PUBLIC_NFT_CONTRACT_ADDRESS || '0x9B264292FA9c63034Ce1EB654889BbFb67645CdF') as `0x${string}`;
 const BASE_RPC_URL = process.env.NEXT_PUBLIC_BASE_RPC_URL || 'https://mainnet.base.org';
 
 // Create clients
@@ -179,6 +179,19 @@ export async function GET(request: NextRequest) {
       functionName: 'mintPrice'
     });
 
+    // Prepare mint data
+    const sessionId = `0x${Buffer.from(`game_${Date.now()}`).toString('hex').padEnd(64, '0')}`;
+    const mintData = encodeFunctionData({
+      abi: NFT_CONTRACT_ABI,
+      functionName: 'mintPumpkinNFT',
+      args: [
+        sessionId as `0x${string}`,
+        BigInt(score),
+        BigInt(1), // level - will be calculated from score
+        BigInt(Math.floor(parseInt(score) / 10)) // pumpkins collected estimate
+      ]
+    });
+
     return NextResponse.json({
       success: true,
       data: {
@@ -187,6 +200,8 @@ export async function GET(request: NextRequest) {
         mintPrice: mintPrice.toString(),
         mintPriceEth: '0.0001',
         contractAddress: NFT_CONTRACT_ADDRESS,
+        sessionId,
+        mintData,
         eligible: tier !== 'Ineligible',
         requirements: {
           bronze: 100,

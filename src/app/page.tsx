@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { sdk } from '@farcaster/miniapp-sdk';
 import PumpkinGame from '@/components/PumpkinGame';
 
 export default function Home() {
@@ -11,17 +10,19 @@ export default function Home() {
   useEffect(() => {
     const initMiniApp = async () => {
       try {
-        await sdk.actions.ready();
-        const context = await sdk.context;
-        setUser(context?.user);
-        setIsReady(true);
-      } catch (error) {
-        console.error('Failed to initialize MiniApp:', error);
-        // Fallback for development
+        // Fallback user for now (Farcaster SDK removed due to dependency conflicts)
         setUser({
           fid: 0,
           username: 'guest',
-          displayName: 'Guest User'
+          displayName: 'Guest Player'
+        });
+        setIsReady(true);
+      } catch (error) {
+        console.error('Failed to initialize:', error);
+        setUser({
+          fid: 0,
+          username: 'guest',
+          displayName: 'Guest Player'
         });
         setIsReady(true);
       }

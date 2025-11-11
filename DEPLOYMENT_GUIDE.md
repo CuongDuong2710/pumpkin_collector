@@ -106,10 +106,10 @@ BASESCAN_API_KEY=your_basescan_api_key_here
 ## 🎯 How the NFT System Works
 
 ### **Game Scoring → NFT Tiers**:
-- 🥉 **Bronze**: 100-499 points (0.001 ETH)
-- 🥈 **Silver**: 500-999 points (0.001 ETH)  
-- 🥇 **Gold**: 1000-1999 points (0.001 ETH)
-- 🏆 **Legendary**: 2000+ points (0.001 ETH)
+- 🥉 **Bronze**: 100-499 points (0.0001 ETH)
+- 🥈 **Silver**: 500-999 points (0.0001 ETH)  
+- 🥇 **Gold**: 1000-1999 points (0.0001 ETH)
+- 🏆 **Legendary**: 2000+ points (0.0001 ETH)
 
 ### **Player Flow**:
 1. Player finishes game with score ≥ 100
@@ -132,7 +132,7 @@ BASESCAN_API_KEY=your_basescan_api_key_here
 
 ### **Base Mainnet**:
 - Deployment: ~$15-20 USD
-- Per NFT Mint: ~$0.001 ETH + gas (~$1-2 total)
+- Per NFT Mint: ~$0.0001 ETH + gas (~$0.20-0.30 total)
 
 ## 🛠 Commands Reference
 

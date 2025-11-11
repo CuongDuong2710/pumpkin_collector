@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
       data: {
         contractAddress: NFT_CONTRACT_ADDRESS,
         mintPrice: mintPrice.toString(),
-        mintPriceEth: parseEther('0.001').toString(), // 0.001 ETH
+        mintPriceEth: parseEther('0.0001').toString(), // 0.0001 ETH
         tier,
         score,
         level,
@@ -185,7 +185,7 @@ export async function GET(request: NextRequest) {
         score: parseInt(score),
         tier,
         mintPrice: mintPrice.toString(),
-        mintPriceEth: '0.001',
+        mintPriceEth: '0.0001',
         contractAddress: NFT_CONTRACT_ADDRESS,
         eligible: tier !== 'Ineligible',
         requirements: {

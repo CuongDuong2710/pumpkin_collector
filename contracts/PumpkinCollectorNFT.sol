@@ -25,14 +25,14 @@ contract PumpkinCollectorNFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGua
     mapping(address => uint256) public mintedCount;
     uint256 public constant MAX_MINTS_PER_ADDRESS = 10;
     
-    // Minting cost in wei (0.001 ETH on Base)
-    uint256 public mintPrice = 0.001 ether;
+    // Minting cost in wei (0.0001 ETH on Base - more affordable!)
+    uint256 public mintPrice = 0.0001 ether;
     
     // NFT metadata URIs for different tiers
-    string public bronzeURI = "https://your-domain.com/metadata/bronze.json";
-    string public silverURI = "https://your-domain.com/metadata/silver.json";
-    string public goldURI = "https://your-domain.com/metadata/gold.json";
-    string public legendaryURI = "https://your-domain.com/metadata/legendary.json";
+    string public bronzeURI = "https://pumpkin-collector.vercel.app/metadata/bronze.json";
+    string public silverURI = "https://pumpkin-collector.vercel.app/metadata/silver.json";
+    string public goldURI = "https://pumpkin-collector.vercel.app/metadata/gold.json";
+    string public legendaryURI = "https://pumpkin-collector.vercel.app/metadata/legendary.json";
     
     // Game verification - tracks valid game sessions
     mapping(bytes32 => bool) public validGameSessions;

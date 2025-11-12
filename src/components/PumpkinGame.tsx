@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { sdk } from '@farcaster/miniapp-sdk';
 
 interface PumpkinGameState {
   score: number;
@@ -307,46 +308,58 @@ export default function PumpkinGame() {
                     
                     setIsMinting(true);
                     try {
-                      // Check if wallet is connected
-                      if (typeof window !== 'undefined' && (window as any).ethereum) {
-                        const accounts = await (window as any).ethereum.request({ 
-                          method: 'eth_requestAccounts' 
+                      // Use Farcaster SDK's Ethereum provider
+                      const provider = await sdk.wallet.getEthereumProvider();
+                      
+                      if (!provider) {
+                        alert('Wallet provider not available');
+                        setIsMinting(false);
+                        return;
+                      }
+                      
+                      // Request accounts (wallet connection)
+                      const accounts = await provider.request({ 
+                        method: 'eth_requestAccounts' 
+                      }) as string[];
+                      
+                      if (accounts.length > 0) {
+                        // Switch to Base network if needed
+                        try {
+                          await provider.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{ chainId: '0x2105' }], // Base chain ID (8453 in hex)
+                          });
+                        } catch (switchError: any) {
+                          // Chain might not be added, ignore and continue
+                          console.log('Network switch:', switchError);
+                        }
+                        
+                        // Prepare transaction
+                        const txParams = {
+                          to: nftMintData.contractAddress as `0x${string}`,
+                          from: accounts[0] as `0x${string}`,
+                          value: `0x${BigInt(nftMintData.mintPrice).toString(16)}` as `0x${string}`,
+                          data: nftMintData.mintData as `0x${string}`,
+                          gas: '0x30D40' as `0x${string}`, // 200000 in hex
+                        };
+                        
+                        // Send transaction
+                        const txHash = await provider.request({
+                          method: 'eth_sendTransaction',
+                          params: [txParams],
                         });
                         
-                        if (accounts.length > 0) {
-                          // Switch to Base network if needed
-                          await (window as any).ethereum.request({
-                            method: 'wallet_switchEthereumChain',
-                            params: [{ chainId: '0x2105' }], // Base chain ID
-                          });
-                          
-                          // Prepare transaction
-                          const txParams = {
-                            to: nftMintData.contractAddress,
-                            from: accounts[0],
-                            value: `0x${BigInt(nftMintData.mintPrice).toString(16)}`,
-                            data: nftMintData.mintData,
-                            gas: '0x30D40', // 200000 in hex
-                          };
-                          
-                          // Send transaction
-                          const txHash = await (window as any).ethereum.request({
-                            method: 'eth_sendTransaction',
-                            params: [txParams],
-                          });
-                          
-                          if (txHash) {
-                            setMintSuccess(true);
-                          }
-                        } else {
-                          alert('Please connect your wallet first');
+                        if (txHash) {
+                          setMintSuccess(true);
                         }
-                      } else {
-                        alert('Please install MetaMask or use a Web3 wallet');
                       }
-                    } catch (error) {
+                    } catch (error: any) {
                       console.error('Minting error:', error);
-                      alert('Failed to mint NFT. Please try again.');
+                      if (error.message?.includes('User rejected')) {
+                        alert('Transaction cancelled');
+                      } else {
+                        alert('Failed to mint NFT. Please try again.');
+                      }
                     } finally {
                       setIsMinting(false);
                     }
